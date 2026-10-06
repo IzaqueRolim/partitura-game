@@ -28,7 +28,12 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      # O runner do GitHub já traz o Android SDK. Aqui só garantimos as peças que o app usa.
+      # (sem "packages", a ação tenta instalar o pacote antigo "tools", que não existe mais, e falha)
       - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-36'
+          log-accepted-android-sdk-licenses: false
 
       - name: Instalar dependências e gerar o site
         run: |
