@@ -1,0 +1,70 @@
+# Gera o APK do app Partitura automaticamente no GitHub (sem precisar instalar o Android Studio).
+# - A cada push na branch main (ou manualmente em Actions → "Gerar APK Android" → Run workflow)
+# - O APK de teste fica em Actions → execução → Artifacts → "partitura-apk-debug"
+# - Se os secrets de assinatura existirem, gera também o APK e o AAB de produção (Play Store)
+name: Gerar APK Android
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    env:
+      VERSION_CODE: ${{ github.run_number }}
+      TEM_CHAVE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && 'sim' || 'nao' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Instalar dependências e gerar o site
+        run: |
+          npm ci
+          npm run build
+          npx cap sync android
+
+      - name: APK de teste (debug)
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: partitura-apk-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      # ── produção (opcional): configure os secrets ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD,
+      #    ANDROID_KEY_ALIAS e ANDROID_KEY_PASSWORD em Settings → Secrets and variables → Actions
+      - name: APK e AAB assinados (produção)
+        if: ${{ env.TEM_CHAVE == 'sim' }}
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/partitura.jks"
+          export ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/partitura.jks"
+          ./gradlew assembleRelease bundleRelease --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('android/app/build/outputs/apk/release/*.apk') != '' }}
+        with:
+          name: partitura-producao
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/bundle/release/*.aab

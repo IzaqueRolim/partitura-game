@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Partitura</string>
+    <string name="title_activity_main">Partitura</string>
+    <string name="package_name">br.ufam.partitura</string>
+    <string name="custom_url_scheme">br.ufam.partitura</string>
+</resources>
