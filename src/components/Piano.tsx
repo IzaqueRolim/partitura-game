@@ -100,6 +100,7 @@ export default function Piano({ from, to, onNote, marks = {}, labels = false, so
                 className={`key white ${pressed.has(m) ? 'down' : ''} ${marks[m] ?? ''}`}
                 onPointerDown={(e) => { e.preventDefault(); press(m) }}
                 aria-label={`${NOMES[g]}${oit}`}
+                data-midi={m}
               >
                 {labels ? <span>{NOMES[g]}</span> : g === 0 ? <span className="c-label">Dó{oit}</span> : null}
               </button>
@@ -108,6 +109,7 @@ export default function Piano({ from, to, onNote, marks = {}, labels = false, so
                   className={`key black ${pressed.has(m + 1) ? 'down' : ''} ${marks[m + 1] ?? ''}`}
                   onPointerDown={(e) => { e.preventDefault(); press(m + 1) }}
                   aria-label={`${NOMES[g]}♯${oit}`}
+                  data-midi={m + 1}
                   style={{ zIndex: 2 + i }}
                 />
               )}

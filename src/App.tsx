@@ -18,6 +18,7 @@ import Intervalos from './pages/Intervalos'
 import LeituraMelodias from './pages/LeituraMelodias'
 import Dicionario, { QuizSimbolos } from './pages/Dicionario'
 import Maestro from './pages/Maestro'
+import { LicaoEscalasMaior, LicaoEscalasMenor, LicaoEscalasBlues, LicaoEscalasJazz, IdentificarEscala, ConstruirEscalaPiano } from './pages/Escalas'
 import Desafio from './pages/Desafio'
 import Revisao from './pages/Revisao'
 import Progresso from './pages/Progresso'
@@ -98,6 +99,18 @@ export const TRILHA: Unidade[] = [
       { id: 'quiz-simbolos', titulo: 'Quiz de símbolos', tipo: 'Quiz', requer: ['simbolos'], render: () => <QuizSimbolos /> },
       { id: 'escritor', titulo: 'Escritor de partituras: escreva e ouça', tipo: 'Ferramenta', requer: ['quiz-figuras', 'notas-sol'], render: () => <Escritor /> },
       { id: 'desafio-partitura', titulo: 'Desafio: leia a partitura completa', tipo: 'Desafio', requer: ['melodias', 'armaduras', 'quiz-compassos'], render: () => <Desafio /> },
+    ],
+  },
+  {
+    titulo: '7. Escalas',
+    desc: 'Maior, menores, pentatônicas, blues e escalas do jazz',
+    itens: [
+      { id: 'licao-escalas-maior', titulo: 'Escala maior: tons, semitons e construção', tipo: 'Lição', requer: ['licao-acidentes', 'licao-teclado'], render: () => <LicaoEscalasMaior /> },
+      { id: 'licao-escalas-menor', titulo: 'Escalas menores: natural, harmônica e melódica', tipo: 'Lição', requer: ['licao-escalas-maior'], render: () => <LicaoEscalasMenor /> },
+      { id: 'licao-escalas-blues', titulo: 'Pentatônicas e blues', tipo: 'Lição', requer: ['licao-escalas-menor'], render: () => <LicaoEscalasBlues /> },
+      { id: 'licao-escalas-jazz', titulo: 'Escalas do jazz: modos, bebop e tons inteiros', tipo: 'Lição', requer: ['licao-escalas-maior'], render: () => <LicaoEscalasJazz /> },
+      { id: 'escalas-identificar', titulo: 'Que escala é esta?', tipo: 'Quiz', requer: ['licao-escalas-maior', 'licao-escalas-menor'], render: () => <IdentificarEscala /> },
+      { id: 'escalas-piano', titulo: 'Construa a escala no piano', tipo: 'Minigame', requer: ['licao-escalas-maior'], render: () => <ConstruirEscalaPiano /> },
     ],
   },
 ]

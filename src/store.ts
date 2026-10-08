@@ -196,6 +196,7 @@ export const CONQUISTAS: Conquista[] = [
   { id: 'ouvido', nome: 'Ouvido afinado', desc: 'Chegue ao nível 3 da percepção de notas', ok: () => estadoNivel('percepcao').max >= 3 },
   { id: 'armaduras', nome: 'Mestre das armaduras', desc: 'Desbloqueie o último nível de armaduras', ok: () => estadoNivel('armaduras').max >= 5 },
   { id: 'intervalos', nome: 'Saltador', desc: 'Chegue ao nível 4 de intervalos', ok: () => estadoNivel('intervalos').max >= 4 },
+  { id: 'escalas', nome: 'Construtor de escalas', desc: 'Chegue ao nível 4 de escalas no piano', ok: () => estadoNivel('escalas-piano').max >= 4 },
   { id: 'maestro', nome: 'Maestro', desc: '20 acertos no Maestro do compasso', ok: () => (r('maestro').acertos ?? 0) >= 20 },
   { id: 'construtor', nome: 'Arquiteto do compasso', desc: '10 compassos corretos no construtor', ok: () => (r('construtor').acertos ?? 0) >= 10 },
   { id: 'revisor', nome: 'Aprendendo com os erros', desc: 'Revise 20 cartões de erro', ok: () => load('revisados', 0) >= 20 },
